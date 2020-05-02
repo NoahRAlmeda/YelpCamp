@@ -9,6 +9,12 @@ app.set("view engine", "ejs");
 let campgrounds = [
     { name: "Culver Summer Camp", image: "https://data.parkbench.com/content/data/businesses/8/e/e/a/9/NjAweDYwMA--_8eea958134562f87d68c772375cd03b2.jpg" },
     { name: "Guajataca Summer Camp", image: "https://puertorico.com.pr/wp-content/uploads/2013/05/Guajataca-Lake-02.jpg" },
+    { name: "Nookz Summer Camp", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFf520NswwAp5Ru7kWEoaMoDuhMQhhhj8nPpqJwloX9wlPPEtY&s" },
+    { name: "Culver Summer Camp", image: "https://data.parkbench.com/content/data/businesses/8/e/e/a/9/NjAweDYwMA--_8eea958134562f87d68c772375cd03b2.jpg" },
+    { name: "Guajataca Summer Camp", image: "https://puertorico.com.pr/wp-content/uploads/2013/05/Guajataca-Lake-02.jpg" },
+    { name: "Nookz Summer Camp", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFf520NswwAp5Ru7kWEoaMoDuhMQhhhj8nPpqJwloX9wlPPEtY&s" },
+    { name: "Culver Summer Camp", image: "https://data.parkbench.com/content/data/businesses/8/e/e/a/9/NjAweDYwMA--_8eea958134562f87d68c772375cd03b2.jpg" },
+    { name: "Guajataca Summer Camp", image: "https://puertorico.com.pr/wp-content/uploads/2013/05/Guajataca-Lake-02.jpg" },
     { name: "Nookz Summer Camp", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFf520NswwAp5Ru7kWEoaMoDuhMQhhhj8nPpqJwloX9wlPPEtY&s" }
 ];
 
