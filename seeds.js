@@ -42,7 +42,6 @@ function seedDB() {
                     if(err) {
                         console.log("Error: ", err);
                     } else {
-                        console.log(data);
                         // Create comment
                         Comment.create({
                             text: "This place is great I wish there was internet",

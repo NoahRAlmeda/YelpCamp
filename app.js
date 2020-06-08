@@ -47,6 +47,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
+
 app.get('/', (req, res) => {
     console.log("Entering GET landing");
 
@@ -54,12 +59,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/campgrounds', (req, res) => {
-    console.log("Entering GET campgrounds");
     Campground.find({}, (err, allCampgrounds) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(allCampgrounds);
             res.render("campgrounds/index", {campgrounds: allCampgrounds});
         }
     });
@@ -82,7 +85,6 @@ app.post("/campgrounds", (req, res) => {
         if(err) {
             console.log(err);
         } else {
-            console.log(newEntry);
             res.redirect("/campgrounds");
         }
     });   
@@ -104,7 +106,7 @@ app.get("/campgrounds/:id", (req, res) => {
 });
 
 // COMMENT ROUTES
-app.get("/campgrounds/:id/comments/new", (req, res) => {
+app.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res) => {
     let campID = req.params.id;
 
     Campground.findById(campID, (err, foundCampground) => {
@@ -116,7 +118,7 @@ app.get("/campgrounds/:id/comments/new", (req, res) => {
     });
 });
 
-app.post("/campgrounds/:id/comments", (req, res) => {
+app.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
     let campID = req.params.id;
     let postComment = req.body.comment;
 
@@ -187,11 +189,6 @@ app.get("/logout", (req, res) => {
 //     res.send("Error 404!");
 // });
 
-// Run the app
-app.listen(port,  () => { 
-    console.log(`Server ${port}: Welcome to YelpCamp!`); 
-});
-
 // Function which validates if user is logged in
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
@@ -199,3 +196,8 @@ function isLoggedIn(req, res, next) {
     }
     res.redirect("/login");
 }
+
+// Run the app
+app.listen(port,  () => { 
+    console.log(`Server ${port}: Welcome to YelpCamp!`); 
+});
