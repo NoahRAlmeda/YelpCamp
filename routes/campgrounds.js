@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 //  NEW Campground ROUTES
 // =======================
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
@@ -30,12 +30,16 @@ router.get("/new", (req, res) => {
 //  CREATE Campground ROUTES
 // ==========================
 
-router.post("/", (req, res) => {
+router.post("/", isLoggedIn, (req, res) => {
     let name = req.body.name;
     let image = req.body.image;
     let desc = req.body.description;
+    let author = {
+        id: req.user._id,
+        username: req.user.username
+    }
 
-    let newCampground = {name: name, image: image, description: desc};
+    let newCampground = {name: name, image: image, description: desc, author: author};
 
     Campground.create(newCampground, (err, newEntry) => {
         if(err) {
