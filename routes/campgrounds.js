@@ -100,7 +100,7 @@ router.put("/:id", (req, res) => {
 // =========================
 //  DESTROY Campground ROUTE 
 // =========================
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", checkCampgroundOwnership, async(req, res) => {
     let campgroundID = req.params.id;
 
     try {
