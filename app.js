@@ -5,6 +5,7 @@ let bodyParser = require("body-parser");
 let mongoose = require("mongoose");
 let passport = require("passport");
 let LocalStrategy = require("passport-local");
+let methodOverride = require("method-override");
 let seedDB = require("./seeds");
 
 // DATABASE MODELS
@@ -19,7 +20,12 @@ let commentsRoutes = require("./routes/comments");
 let port = 4000;
 let connectionString = "mongodb://127.0.0.1:27017/yelpcamp";
 
-mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(connectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+});
+
 const db = mongoose.connection;
 
 db.once('open', _ => {
@@ -33,6 +39,7 @@ db.on('error', (err) => {
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 
 // Seed function made to populate the database with dummy data
 // seedDB();
