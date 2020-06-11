@@ -53,6 +53,54 @@ router.post("/", isLoggedIn, (req, res) => {
     });
 });
 
+// ===================
+//  EDIT COMMENT ROUTE
+// ===================
+router.get("/:comment_id/edit", checkCommentOwnership, (req, res) => {
+    let commentID = req.params.comment_id;
+    let campID = req.params.id;
+
+    Comment.findById(commentID, (err, foundComment) => {
+        if(err) {
+            console.log("ERROR: ", err);
+        } else {
+            res.render("comments/edit", {comment: foundComment, campID: campID});
+        }
+    });
+});
+
+// ======================
+//  UPDATE COMMENT ROUTE
+// ======================
+router.put("/:comment_id", checkCommentOwnership, (req, res) => {
+    let commentID = req.params.comment_id;
+    let updateComment = req.body.comment;
+
+    Comment.findByIdAndUpdate(commentID, updateComment, (err, updatedComment) => {
+        if(err) {
+            console.log("ERROR: ", err);
+            res.redirect("back");
+        } else {
+            res.redirect(`/campgrounds/${req.params.id}`);
+        }
+    });
+});
+
+// ======================
+//  DESTROY COMMENT ROUTE
+// ======================
+router.delete("/:comment_id", checkCommentOwnership, (req, res) => {
+    let commentID = req.params.comment_id;
+
+    Comment.findByIdAndRemove(commentID, (err, deletedComment) => {
+        if(err) {
+            console.log("ERROR: ", err);
+            res.redirect("back");
+        } else {
+            res.redirect(`/campgrounds/${req.params.id}`);
+        }
+    });
+});
 
 // MIDDLEWARE Function
 function isLoggedIn(req, res, next) {
@@ -60,6 +108,29 @@ function isLoggedIn(req, res, next) {
         return next();
     }
     res.redirect("/login");
+}
+
+function checkCommentOwnership(req, res, next) {
+    let commentID = req.params.comment_id;
+
+    // Checks if a User is logged in
+    if(req.isAuthenticated()) {        
+       Comment.findById(commentID, (err, foundComment) => {
+           if(err) {
+               console.log("ERROR: ", err);
+               res.redirect("back");
+           } else {
+               // If User is the author of the comment then he can edit
+               if (foundComment.author.id.equals(req.user._id)) {
+                   next();
+               } else {
+                   res.redirect("back");
+               }
+           }
+       });
+   } else {
+       res.redirect("back");
+   }
 }
 
 module.exports = router;
