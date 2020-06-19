@@ -7,6 +7,7 @@ let passport = require("passport");
 let LocalStrategy = require("passport-local");
 let methodOverride = require("method-override");
 let seedDB = require("./seeds");
+let flash = require("connect-flash");
 
 // DATABASE MODELS
 let User = require("./models/user");
@@ -40,6 +41,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 
 // Seed function made to populate the database with dummy data
 // seedDB();
@@ -57,9 +59,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// locals = global variables
 app.use((req, res, next) => {
     res.locals.user = req.user;
-    console.log(res.locals.user);
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+
     next();
 });
 

@@ -46,8 +46,9 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
 
     Campground.create(newCampground, (err, newEntry) => {
         if(err) {
-            console.log(err);
+            red.flash("error", "Unable to create campground");
         } else {
+            req.flash("success", "Campground was created!");
             res.redirect("/campgrounds");
         }
     });   
@@ -77,6 +78,7 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, (req, res) => {
       
     Campground.findById(campgroundID,(err, foundCampground) => {
         if(err) {
+            req.flash("error", "Campground could not be found");
             console.log("ERROR: ", err);
         } else {
             res.render("campgrounds/edit", {campground: foundCampground});
@@ -93,8 +95,10 @@ router.put("/:id", (req, res) => {
 
     Campground.findByIdAndUpdate(campgroundID, updateCampground, (err, updatedCampground) => {
         if(err) {
+            req.flash("error", "Campground was not found");
             res.redirect("/campgrounds");
         } else {
+            req.flash("success", "Successfully updated campground");
             res.redirect(`/campgrounds/${campgroundID}`);
         }
     });
@@ -109,9 +113,10 @@ router.delete("/:id", middleware.checkCampgroundOwnership, async(req, res) => {
     try {
         let foundCampground = await Campground.findById(campgroundID);
         await foundCampground.remove();
+        req.flash("success", "Successfully deleted campground");
         res.redirect("/campgrounds");
     } catch (error) {
-        console.log(error.message);
+        req.flash("error", "Unable to deleted campground");
         res.redirect("/campgrounds");
     }
 });

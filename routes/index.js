@@ -31,11 +31,13 @@ router.post("/register", (req, res) => {
     User.register(newUser, req.body.password, (err, user) => {
         if(err) {
             console.log("Error: ", err);
+            req.flash("error", err.message);
             return res.render("register");
         }
 
         passport.authenticate("local")(req, res, () => {
             console.log("successfully registered!");
+            req.flash("success", `Weolcome to YelpCamp ${user.username}`);
             res.redirect("/campgrounds");
         });
     });
@@ -56,6 +58,7 @@ router.post("/login", passport.authenticate("local",
         successRedirect: "/campgrounds",
         failureRedirect: "/login"
     }), (req, res) => {    
+        req.flash("success", `Welcome back ${req.user.username}`);
 });
 
 // ==============
@@ -64,6 +67,7 @@ router.post("/login", passport.authenticate("local",
 
 router.get("/logout", (req, res) => {
     req.logout();
+    req.flash("error", "You logged Out!");
     res.redirect("/campgrounds");
 });
 
@@ -72,13 +76,5 @@ router.get("/logout", (req, res) => {
 //     console.log("Error 404!");
 //     res.send("Error 404!");
 // });
-
-// Function which validates if user is logged in
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
